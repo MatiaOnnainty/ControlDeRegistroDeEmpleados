@@ -143,7 +143,6 @@ namespace ControlDeRegistroDeEmpleados
             this.Controls.Add(this.dataGridViewPlanilla);
             this.Controls.Add(this.BotonCrearArchivoExcel);
             this.Controls.Add(this.BotonCargarArchivo);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Control de Registro de Empleados";
