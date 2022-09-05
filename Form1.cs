@@ -111,7 +111,6 @@ namespace ControlDeRegistroDeEmpleados
             //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
             //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             if (File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx"))
