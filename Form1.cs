@@ -104,7 +104,7 @@ namespace ControlDeRegistroDeEmpleados
             BotonCargarArchivo.Location = new System.Drawing.Point(158, 146);
         }
 
-        public DataTable DtEmpleados { get; set; }
+        private DataTable DtEmpleados;
         //esto agregué por si hay problemas con el github
         private void BotonGenerarRegistrosJornada_Click(object sender, EventArgs e)
         {
