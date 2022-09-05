@@ -71,7 +71,6 @@ namespace ControlDeRegistroDeEmpleados
             this.dataGridViewPlanilla.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewPlanilla.BackgroundColor = System.Drawing.Color.BurlyWood;
             this.dataGridViewPlanilla.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewPlanilla.ColumnHeadersVisible = false;
             this.dataGridViewPlanilla.Location = new System.Drawing.Point(13, 54);
             this.dataGridViewPlanilla.Name = "dataGridViewPlanilla";
             this.dataGridViewPlanilla.ReadOnly = true;
