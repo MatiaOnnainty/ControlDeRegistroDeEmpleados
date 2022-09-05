@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Windows.Forms;
-using Microsoft.Office.Interop.Excel;
-using objetoExcel = Microsoft.Office.Interop.Excel;
-using ControlDeAsistenciaPersonal;
+﻿using ControlDeAsistenciaPersonal;
 using ControlDeRegistroDeEmpleados.modulo_calculo;
 using SpreadsheetLight;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.OleDb;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 using DataTable = System.Data.DataTable;
 
 namespace ControlDeRegistroDeEmpleados
@@ -24,91 +18,127 @@ namespace ControlDeRegistroDeEmpleados
         {
             InitializeComponent();
         }
-        string rutaBDEXCEL = Directory.GetCurrentDirectory() + "\\BD_EXCEL";
 
-        DataView ImportarDatos(string nombreArchivo)
-        {
-            string conexion = string.Format("Provider = Microsoft.ACE.OLEDB.12.0; Data Source = {0}; Extended Properties = 'Excel 12.0;'", nombreArchivo);
 
-            OleDbConnection conector = new OleDbConnection(conexion);
-
-            conector.Open();
-
-            OleDbCommand consulta = new OleDbCommand("select * from [Hoja1$]", conector);
-
-            OleDbDataAdapter adaptador = new OleDbDataAdapter
-            {
-                SelectCommand = consulta
-            };
-
-            DataSet ds = new DataSet();
-
-            adaptador.Fill(ds);
-
-            conector.Close();
-
-            ds.Tables[0].AsEnumerable().Where(row => row.ItemArray.All(field => field == null || field == DBNull.Value || field.Equals(string.Empty) || string.IsNullOrWhiteSpace(field.ToString()))).ToList().ForEach(row => row.Delete());
-            ds.Tables[0].AcceptChanges();
-
-            return ds.Tables[0].DefaultView;
-        }
+        //string rutaBDEXCEL = Directory.GetCurrentDirectory() + "\\BD_EXCEL";
+        private DataTable DtEmpleados;
 
         private void BotonCargarArchivo_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
+            var fileName = string.Empty;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                Filter = "Excel | *.xls;*.xlsx;",
-                Title = "Seleccionar Archivo"
-            };
+                openFileDialog.InitialDirectory = "C:\\Users\\Bangho\\Descargas";
+                openFileDialog.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                dataGridViewPlanilla.Visible = true;
-                dataGridViewEscondido.Visible = false;
-                BotonCrearArchivoExcel.Visible = true;
-                BotonGenerarRegistrosJornada.Visible = true;
-                panelFiltrado.Visible = true;
-                BotonCargarArchivo.Location = new System.Drawing.Point(12, 12);
-
-                dataGridViewEscondido.DataSource = ImportarDatos(openFileDialog.FileName);
-
-                int contador = dataGridViewEscondido.Rows.Count;
-                string dni, nombre, fecha, tipo;
-
-                if (dataGridViewPlanilla.Rows.Count == 0)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    dataGridViewPlanilla.Columns.Add("dni", "Dni");
-                    dataGridViewPlanilla.Columns.Add("nombre", "Nombre y Apellido");
-                    dataGridViewPlanilla.Columns.Add("fecha", "Dia y hora");
-                    dataGridViewPlanilla.Columns.Add("tipo", "Observacion");
-                }
-                for (int i = 0; i < contador - 1; i++)
-                {
-                    dni = dataGridViewEscondido.Rows[i].Cells[0].Value.ToString();
-                    nombre = dataGridViewEscondido.Rows[i].Cells[1].Value.ToString();
-                    fecha = dataGridViewEscondido.Rows[i].Cells[2].Value.ToString();
-                    tipo = dataGridViewEscondido.Rows[i].Cells[3].Value.ToString();
+                    filePath = openFileDialog.FileName;
+                    fileName = openFileDialog.SafeFileName;
 
-                    dataGridViewPlanilla.Rows.Add(dni, nombre, fecha, tipo);
+                    //Metodo que crea una copia del archivo y carga sus datos en un datagridview
+                    CrearCopiaDeArchivo(filePath, fileName);
+
+                    //Si se selecciona un archivo correcto entonces habilitamos las opciones de filtrado y carga de datos
+                    panelFiltrado.Enabled = true;
+                    dataGridViewPlanilla.Visible = true;
+                    BotonVerListaEmpleados.Visible = true;
+                    BotonGenerarRegistrosJornada.Visible = true;
+                    BotonGenerarRegistrosJornada.Enabled = true;
+                    panelFiltrado.Visible = true;
+                    BotonCargarArchivo.Location = new System.Drawing.Point(13, 13);
                 }
-                dataGridViewEscondido.DataSource = "";
             }
         }
-        private void Form1_Load(object sender, EventArgs e)
+
+        public void CrearCopiaDeArchivo(string path, string nombre)
         {
-            dataGridViewPlanilla.Visible = false;
-            dataGridViewEscondido.Visible = false;
-            BotonCrearArchivoExcel.Visible = false;
-            BotonGenerarRegistrosJornada.Visible = false;
-            panelFiltrado.Visible = false;
-            BotonCargarArchivo.Location = new System.Drawing.Point(158, 146);
+            SLDocument sl = new SLDocument();
+
+            string fileName = nombre;
+            string sourcePath = path;
+            string targetPath = Directory.GetCurrentDirectory() + "\\BD_EXCEL";
+
+            // sourceFile es la ubicación del archivo que seleccionamos, y destFile es la ubicación donde guardamos
+            // la copia y el nombre que queremos que lleve.
+            string sourceFile = Path.Combine(sourcePath, "");
+            string destFile = Path.Combine(targetPath, "RegistroFinal.xlsx");
+
+            // crea el directorio si no existe.
+            Directory.CreateDirectory(targetPath);
+
+            // hace la copia del archivo pasando la ubicación de origen y destino. con true decimos que sobreescriba el documento
+            File.Copy(sourceFile, destFile, true);
+
+            //guardamos el documento que va a estar en nuestro proyecto
+            sl = new SLDocument(destFile);
+
+
+
+            //llamamos al metodo que carga el datagridview
+            CargarDatos(destFile.ToString());
         }
 
-        private DataTable DtEmpleados;
-        //esto agregué por si hay problemas con el github
+        public void CargarDatos(string path)
+        {
+            //Definis la ruta
+            String directorioArchivo = path;
+            //Definis el connectionString
+            String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
+            //Definis la Query 
+            String consulta = "Select * from [Hoja 1$]";
+            //Instancias un nuevo objeto de tipo OleDbConnection y abris la conexión con .Open();
+            OleDbConnection con = new OleDbConnection(conexion);
+            con.Open();
+            //Definisun Command pasándole tu query y el objeto de conexión
+            OleDbCommand cmd = new OleDbCommand(consulta, con);
+            //Por último creas un Adapter y se lo asignas a un DataSet
+            OleDbDataAdapter db = new OleDbDataAdapter(cmd);
+            DataTable ds = new DataTable();
+
+            db.Fill(ds);
+            con.Close();
+
+            //tomamos la primera tabla que es el documento seleccionado y borramos todas las fillas nulas o vacías
+            ds.AsEnumerable().Where(row => row.ItemArray.All(field => field == null || field == DBNull.Value || field.Equals(string.Empty) || string.IsNullOrWhiteSpace(field.ToString()))).ToList().ForEach(row => row.Delete());
+            ds.Columns[0].ColumnName = "dni";
+            ds.AcceptChanges();
+
+            dataGridViewPlanilla.DataSource = ds.DefaultView;
+            //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
+            //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            if (File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx"))
+            {
+                dataGridViewPlanilla.Visible = true;
+                BotonVerListaEmpleados.Visible = true;
+                BotonGenerarRegistrosJornada.Visible = true;
+                panelFiltrado.Visible = true;
+                BotonCargarArchivo.Location = new System.Drawing.Point(13, 13);
+            }
+            else
+            {
+                dataGridViewPlanilla.Visible = false;
+                BotonVerListaEmpleados.Visible = false;
+                BotonGenerarRegistrosJornada.Visible = false;
+                panelFiltrado.Visible = false;
+                BotonCargarArchivo.Location = new System.Drawing.Point(158, 146);
+            }
+            
+        }
+
         private void BotonGenerarRegistrosJornada_Click(object sender, EventArgs e)
         {
-            string path = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\REGISTRO FINAL.xlsx";
+            BotonVerListaEmpleados.Enabled = true;
+            string path = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx";
 
             SLDocument document = new SLDocument();
             DataTable dt = new DataTable();
@@ -120,6 +150,8 @@ namespace ControlDeRegistroDeEmpleados
             dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[3].Value.ToString(), typeof(string));
 
             List<Empleado> listaFinal = new List<Empleado>();
+            int contador = 0;
+
 
             string dni, nombre, fecha, tipo;
             Empleado persona = null;
@@ -131,7 +163,6 @@ namespace ControlDeRegistroDeEmpleados
                 nombre = dataGridViewPlanilla.Rows[i].Cells[1].Value.ToString();
                 fecha = dataGridViewPlanilla.Rows[i].Cells[2].Value.ToString();
                 tipo = dataGridViewPlanilla.Rows[i].Cells[3].Value.ToString();
-
 
                 if (persona == null)
                 {
@@ -154,7 +185,7 @@ namespace ControlDeRegistroDeEmpleados
                 }
 
                 TipoRegistro tipoRegistro = tipo == "Registro de entrada" ? TipoRegistro.ingreso : TipoRegistro.egreso;
-                persona.ListaRegistros.Add(new Registro_acceso(Convert.ToDateTime(fecha), tipoRegistro));
+                persona.ListaRegistro.Add(new Registro_acceso(Convert.ToDateTime(fecha), tipoRegistro));
 
 
                 //CONDICION PARA EL VALOR INICIAL
@@ -162,7 +193,6 @@ namespace ControlDeRegistroDeEmpleados
                 {
                     dt.Rows.Add(dni, nombre, fecha, tipo);
                 }
-
 
                 //CONDICION PARA EL VALOR FINAL (PARA QUE SE GUARDEN)
                 if (i == dataGridViewPlanilla.Rows.Count - 1)
@@ -172,7 +202,6 @@ namespace ControlDeRegistroDeEmpleados
                     persona.CalcularHorasTrabajadas();
                     listaFinal.Add(persona);
                 }
-
             }
 
             DtEmpleados = dt;
@@ -182,20 +211,19 @@ namespace ControlDeRegistroDeEmpleados
             //_ = File.Exists(path) ? MessageBox.Show("empleado generado correctamente") : MessageBox.Show("no se generó el archivo");
 
             MessageBox.Show("¡Registros Generados con éxito!");
-            BotonCrearArchivoExcel.Visible = true;
+            //buttonVerListaEmpleados.Enabled = true;
         }
 
-        private void BotonCrearArchivoExcel_Click(object sender, EventArgs e)
+        private void BotonVerListaEmpleados_Click(object sender, EventArgs e)
         {
             this.Hide();
             EmpleadosRegistrados empleadosRegistrados = new EmpleadosRegistrados();
             empleadosRegistrados.FormularioPadre = this;
 
-
-            if (DtEmpleados == null && File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\REGISTRO FINAL.xlsx"))
+            if (DtEmpleados == null && File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx"))
             {
                 //Definis la ruta
-                String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\REGISTRO FINAL.xlsx";
+                String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx";
                 //Definis el connectionString
                 String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
                 //Definis la Query 
