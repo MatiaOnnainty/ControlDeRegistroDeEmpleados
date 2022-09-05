@@ -41,6 +41,7 @@
             // 
             this.dataGridViewRegistros.AllowUserToAddRows = false;
             this.dataGridViewRegistros.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewRegistros.BackgroundColor = System.Drawing.Color.BurlyWood;
             this.dataGridViewRegistros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRegistros.Location = new System.Drawing.Point(12, 138);
             this.dataGridViewRegistros.MultiSelect = false;
@@ -95,6 +96,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(418, 481);
             this.Controls.Add(this.labelHorasSemanales);
             this.Controls.Add(this.labelDNI);
