@@ -33,11 +33,7 @@ namespace ControlDeRegistroDeEmpleados
             this.BotonVerListaEmpleados = new System.Windows.Forms.Button();
             this.dataGridViewPlanilla = new System.Windows.Forms.DataGridView();
             this.BotonGenerarRegistrosJornada = new System.Windows.Forms.Button();
-            this.panelFiltrado = new System.Windows.Forms.Panel();
-            this.textBoxFiltradoPorDNI = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPlanilla)).BeginInit();
-            this.panelFiltrado.SuspendLayout();
             this.SuspendLayout();
             // 
             // BotonCargarArchivo
@@ -59,7 +55,7 @@ namespace ControlDeRegistroDeEmpleados
             this.BotonVerListaEmpleados.Enabled = false;
             this.BotonVerListaEmpleados.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.BotonVerListaEmpleados.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BotonVerListaEmpleados.Location = new System.Drawing.Point(230, 378);
+            this.BotonVerListaEmpleados.Location = new System.Drawing.Point(230, 424);
             this.BotonVerListaEmpleados.Name = "BotonVerListaEmpleados";
             this.BotonVerListaEmpleados.Size = new System.Drawing.Size(176, 45);
             this.BotonVerListaEmpleados.TabIndex = 1;
@@ -80,7 +76,7 @@ namespace ControlDeRegistroDeEmpleados
             this.dataGridViewPlanilla.ReadOnly = true;
             this.dataGridViewPlanilla.RowHeadersVisible = false;
             this.dataGridViewPlanilla.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewPlanilla.Size = new System.Drawing.Size(393, 318);
+            this.dataGridViewPlanilla.Size = new System.Drawing.Size(393, 364);
             this.dataGridViewPlanilla.TabIndex = 2;
             // 
             // BotonGenerarRegistrosJornada
@@ -89,7 +85,7 @@ namespace ControlDeRegistroDeEmpleados
             this.BotonGenerarRegistrosJornada.Enabled = false;
             this.BotonGenerarRegistrosJornada.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.BotonGenerarRegistrosJornada.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BotonGenerarRegistrosJornada.Location = new System.Drawing.Point(13, 378);
+            this.BotonGenerarRegistrosJornada.Location = new System.Drawing.Point(13, 424);
             this.BotonGenerarRegistrosJornada.Name = "BotonGenerarRegistrosJornada";
             this.BotonGenerarRegistrosJornada.Size = new System.Drawing.Size(176, 45);
             this.BotonGenerarRegistrosJornada.TabIndex = 3;
@@ -97,41 +93,12 @@ namespace ControlDeRegistroDeEmpleados
             this.BotonGenerarRegistrosJornada.UseVisualStyleBackColor = false;
             this.BotonGenerarRegistrosJornada.Click += new System.EventHandler(this.BotonGenerarRegistrosJornada_Click);
             // 
-            // panelFiltrado
-            // 
-            this.panelFiltrado.BackColor = System.Drawing.Color.Gold;
-            this.panelFiltrado.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFiltrado.Controls.Add(this.textBoxFiltradoPorDNI);
-            this.panelFiltrado.Controls.Add(this.label1);
-            this.panelFiltrado.Location = new System.Drawing.Point(13, 438);
-            this.panelFiltrado.Name = "panelFiltrado";
-            this.panelFiltrado.Size = new System.Drawing.Size(393, 31);
-            this.panelFiltrado.TabIndex = 4;
-            // 
-            // textBoxFiltradoPorDNI
-            // 
-            this.textBoxFiltradoPorDNI.Location = new System.Drawing.Point(98, 3);
-            this.textBoxFiltradoPorDNI.Name = "textBoxFiltradoPorDNI";
-            this.textBoxFiltradoPorDNI.Size = new System.Drawing.Size(290, 20);
-            this.textBoxFiltradoPorDNI.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(5, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Filtrar por DNI";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(418, 481);
-            this.Controls.Add(this.panelFiltrado);
             this.Controls.Add(this.BotonGenerarRegistrosJornada);
             this.Controls.Add(this.dataGridViewPlanilla);
             this.Controls.Add(this.BotonVerListaEmpleados);
@@ -141,8 +108,6 @@ namespace ControlDeRegistroDeEmpleados
             this.Text = "Control de Registro de Empleados";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPlanilla)).EndInit();
-            this.panelFiltrado.ResumeLayout(false);
-            this.panelFiltrado.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -153,9 +118,6 @@ namespace ControlDeRegistroDeEmpleados
         private System.Windows.Forms.Button BotonVerListaEmpleados;
         private System.Windows.Forms.DataGridView dataGridViewPlanilla;
         private System.Windows.Forms.Button BotonGenerarRegistrosJornada;
-        private System.Windows.Forms.Panel panelFiltrado;
-        private System.Windows.Forms.TextBox textBoxFiltradoPorDNI;
-        private System.Windows.Forms.Label label1;
     }
 }
 

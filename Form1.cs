@@ -1,5 +1,4 @@
 ﻿using ControlDeAsistenciaPersonal;
-using ControlDeRegistroDeEmpleados.modulo_calculo;
 using SpreadsheetLight;
 using System;
 using System.Collections.Generic;
@@ -45,12 +44,11 @@ namespace ControlDeRegistroDeEmpleados
                     CrearCopiaDeArchivo(filePath, fileName);
 
                     //Si se selecciona un archivo correcto entonces habilitamos las opciones de filtrado y carga de datos
-                    panelFiltrado.Enabled = true;
+                    
                     dataGridViewPlanilla.Visible = true;
                     BotonVerListaEmpleados.Visible = true;
                     BotonGenerarRegistrosJornada.Visible = true;
                     BotonGenerarRegistrosJornada.Enabled = true;
-                    panelFiltrado.Visible = true;
                     BotonCargarArchivo.Location = new System.Drawing.Point(13, 13);
                 }
             }
@@ -121,7 +119,6 @@ namespace ControlDeRegistroDeEmpleados
                 dataGridViewPlanilla.Visible = true;
                 BotonVerListaEmpleados.Visible = true;
                 BotonGenerarRegistrosJornada.Visible = true;
-                panelFiltrado.Visible = true;
                 BotonCargarArchivo.Location = new System.Drawing.Point(13, 13);
             }
             else
@@ -129,7 +126,6 @@ namespace ControlDeRegistroDeEmpleados
                 dataGridViewPlanilla.Visible = false;
                 BotonVerListaEmpleados.Visible = false;
                 BotonGenerarRegistrosJornada.Visible = false;
-                panelFiltrado.Visible = false;
                 BotonCargarArchivo.Location = new System.Drawing.Point(158, 146);
             }
             
@@ -137,7 +133,6 @@ namespace ControlDeRegistroDeEmpleados
 
         private void BotonGenerarRegistrosJornada_Click(object sender, EventArgs e)
         {
-            BotonVerListaEmpleados.Enabled = true;
             string path = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx";
 
             SLDocument document = new SLDocument();
@@ -211,7 +206,8 @@ namespace ControlDeRegistroDeEmpleados
             //_ = File.Exists(path) ? MessageBox.Show("empleado generado correctamente") : MessageBox.Show("no se generó el archivo");
 
             MessageBox.Show("¡Registros Generados con éxito!");
-            //buttonVerListaEmpleados.Enabled = true;
+
+            BotonVerListaEmpleados.Enabled = true;
         }
 
         private void BotonVerListaEmpleados_Click(object sender, EventArgs e)
@@ -250,6 +246,12 @@ namespace ControlDeRegistroDeEmpleados
             empleadosRegistrados.DatosEmpleados = DtEmpleados;
             empleadosRegistrados.ShowDialog();
         }
+
+        private void textBoxFiltradoPorDNI_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
     }
     
 }
