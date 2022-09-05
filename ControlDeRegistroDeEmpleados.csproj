@@ -88,6 +88,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registro_acceso.cs" />
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 9c08a4be5ef71184739726bc6e3572851b1650c4
   <EmbeddedResource Include="EmpleadosRegistrados.resx">
       <DependentUpon>EmpleadosRegistrados.cs</DependentUpon>
     </EmbeddedResource>
