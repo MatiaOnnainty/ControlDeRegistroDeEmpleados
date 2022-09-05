@@ -30,7 +30,7 @@ namespace ControlDeRegistroDeEmpleados
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = "C:\\Users\\Bangho\\Descargas";
+                openFileDialog.InitialDirectory = "C:\\";
                 openFileDialog.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;

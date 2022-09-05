@@ -21,12 +21,12 @@ namespace ControlDeRegistroDeEmpleados
 
         //nuevo
         private List<Registro_acceso> listaRegistros = new List<Registro_acceso>();
-        private List<Jornada> Historial = new List<Jornada>();
+        public List<Jornada> Historial = new List<Jornada>();
         public string Nombre { get; set; }
         public string DNI { get; set; }
         public double HorasSemanales { get; set; }
         public List<Registro_acceso> ListaRegistro { get => listaRegistros; set => listaRegistros = value; }
-
+        //public List<Jornada> Historial { get => Historial; set => Historial = value; }
 
         private double CalcularHorasDia(DateTime fecha, List<Registro_acceso> lista)
         {
