@@ -30,7 +30,7 @@ namespace ControlDeRegistroDeEmpleados
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.InitialDirectory = "C:\\Users\\Bangho\\Descargas";
+                openFileDialog.InitialDirectory = "C:\\";
                 openFileDialog.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
@@ -107,7 +107,8 @@ namespace ControlDeRegistroDeEmpleados
             ds.Columns[0].ColumnName = "dni";
             ds.AcceptChanges();
 
-            dataGridViewPlanilla.DataSource = ds.DefaultView;
+            for
+            //dataGridViewPlanilla.DataSource = ds.DefaultView;
             //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
             //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
         }
