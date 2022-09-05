@@ -94,7 +94,6 @@ namespace ControlDeRegistroDeEmpleados
                 dataGridViewEscondido.DataSource = "";
             }
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             dataGridViewPlanilla.Visible = false;
