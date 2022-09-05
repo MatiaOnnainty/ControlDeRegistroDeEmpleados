@@ -29,7 +29,6 @@ namespace ControlDeRegistroDeEmpleados
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.BotonCargarArchivo = new System.Windows.Forms.Button();
             this.BotonCrearArchivoExcel = new System.Windows.Forms.Button();
             this.dataGridViewPlanilla = new System.Windows.Forms.DataGridView();
@@ -61,12 +60,14 @@ namespace ControlDeRegistroDeEmpleados
             this.BotonCrearArchivoExcel.BackColor = System.Drawing.Color.Gold;
             this.BotonCrearArchivoExcel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.BotonCrearArchivoExcel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BotonCrearArchivoExcel.Location = new System.Drawing.Point(118, 13);
+            this.BotonCrearArchivoExcel.Location = new System.Drawing.Point(217, 283);
             this.BotonCrearArchivoExcel.Name = "BotonCrearArchivoExcel";
-            this.BotonCrearArchivoExcel.Size = new System.Drawing.Size(100, 23);
+            this.BotonCrearArchivoExcel.Size = new System.Drawing.Size(176, 23);
             this.BotonCrearArchivoExcel.TabIndex = 1;
-            this.BotonCrearArchivoExcel.Text = "Exportar Excel";
+            this.BotonCrearArchivoExcel.Text = "Ver lista de Empleados";
             this.BotonCrearArchivoExcel.UseVisualStyleBackColor = false;
+            this.BotonCrearArchivoExcel.Visible = false;
+            this.BotonCrearArchivoExcel.Click += new System.EventHandler(this.BotonCrearArchivoExcel_Click);
             // 
             // dataGridViewPlanilla
             // 
@@ -89,6 +90,7 @@ namespace ControlDeRegistroDeEmpleados
             this.BotonGenerarRegistrosJornada.TabIndex = 3;
             this.BotonGenerarRegistrosJornada.Text = "Generar registros de jornada";
             this.BotonGenerarRegistrosJornada.UseVisualStyleBackColor = false;
+            this.BotonGenerarRegistrosJornada.Click += new System.EventHandler(this.BotonGenerarRegistrosJornada_Click);
             // 
             // panelFiltrado
             // 
