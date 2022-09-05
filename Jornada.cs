@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ControlDeRegistroDeEmpleados
 {
-    public class Jornada
+    public class Jornada : Empleado
     {
         public Jornada()
         {
