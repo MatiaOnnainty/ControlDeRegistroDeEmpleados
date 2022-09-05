@@ -107,8 +107,7 @@ namespace ControlDeRegistroDeEmpleados
             ds.Columns[0].ColumnName = "dni";
             ds.AcceptChanges();
 
-            for
-            //dataGridViewPlanilla.DataSource = ds.DefaultView;
+            dataGridViewPlanilla.DataSource = ds.DefaultView;
             //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
             //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
         }

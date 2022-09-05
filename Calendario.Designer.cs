@@ -29,15 +29,15 @@ namespace ControlDeRegistroDeEmpleados
         /// </summary>
         private void InitializeComponent()
         {
-            this.monthCalendar1 = new System.Windows.Forms.MonthCalendar();
+            this.calendar = new System.Windows.Forms.MonthCalendar();
             this.SuspendLayout();
             // 
-            // monthCalendar1
+            // calendar
             // 
-            this.monthCalendar1.BackColor = System.Drawing.Color.BurlyWood;
-            this.monthCalendar1.Location = new System.Drawing.Point(18, 18);
-            this.monthCalendar1.Name = "monthCalendar1";
-            this.monthCalendar1.TabIndex = 0;
+            this.calendar.BackColor = System.Drawing.Color.BurlyWood;
+            this.calendar.Location = new System.Drawing.Point(18, 18);
+            this.calendar.Name = "calendar";
+            this.calendar.TabIndex = 0;
             // 
             // Calendario
             // 
@@ -45,15 +45,16 @@ namespace ControlDeRegistroDeEmpleados
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(283, 190);
-            this.Controls.Add(this.monthCalendar1);
+            this.Controls.Add(this.calendar);
             this.Name = "Calendario";
             this.Text = "Calendario";
+            this.Load += new System.EventHandler(this.Calendario_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.MonthCalendar monthCalendar1;
+        private System.Windows.Forms.MonthCalendar calendar;
     }
 }
