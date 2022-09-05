@@ -38,10 +38,16 @@
             // 
             // dataGridViewRegistros
             // 
+            this.dataGridViewRegistros.AllowUserToAddRows = false;
+            this.dataGridViewRegistros.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewRegistros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRegistros.Location = new System.Drawing.Point(12, 138);
+            this.dataGridViewRegistros.MultiSelect = false;
             this.dataGridViewRegistros.Name = "dataGridViewRegistros";
-            this.dataGridViewRegistros.Size = new System.Drawing.Size(394, 300);
+            this.dataGridViewRegistros.ReadOnly = true;
+            this.dataGridViewRegistros.RowHeadersVisible = false;
+            this.dataGridViewRegistros.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewRegistros.Size = new System.Drawing.Size(394, 331);
             this.dataGridViewRegistros.TabIndex = 0;
             // 
             // pictureBox1
@@ -78,12 +84,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(418, 450);
+            this.ClientSize = new System.Drawing.Size(418, 481);
             this.Controls.Add(this.labelDNI);
             this.Controls.Add(this.labelNombre);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.dataGridViewRegistros);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "JornadaEmpleados";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "JornadaEmpleados";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.JornadaEmpleados_FormClosed_1);
             this.Load += new System.EventHandler(this.JornadaEmpleados_Load);

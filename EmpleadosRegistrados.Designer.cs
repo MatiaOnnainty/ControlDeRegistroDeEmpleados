@@ -38,27 +38,33 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.dataGridViewEmpleados);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(358, 388);
+            this.groupBox1.Size = new System.Drawing.Size(394, 419);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Lista Empleados";
             // 
             // dataGridViewEmpleados
             // 
+            this.dataGridViewEmpleados.AllowUserToAddRows = false;
+            this.dataGridViewEmpleados.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewEmpleados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewEmpleados.Location = new System.Drawing.Point(6, 19);
+            this.dataGridViewEmpleados.Location = new System.Drawing.Point(6, 25);
             this.dataGridViewEmpleados.Name = "dataGridViewEmpleados";
-            this.dataGridViewEmpleados.Size = new System.Drawing.Size(346, 363);
+            this.dataGridViewEmpleados.ReadOnly = true;
+            this.dataGridViewEmpleados.RowHeadersVisible = false;
+            this.dataGridViewEmpleados.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewEmpleados.Size = new System.Drawing.Size(382, 388);
             this.dataGridViewEmpleados.TabIndex = 0;
             this.dataGridViewEmpleados.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewEmpleados_CellDoubleClick_1);
             // 
             // buttonAtras
             // 
-            this.buttonAtras.Location = new System.Drawing.Point(18, 415);
+            this.buttonAtras.Location = new System.Drawing.Point(18, 437);
             this.buttonAtras.Name = "buttonAtras";
-            this.buttonAtras.Size = new System.Drawing.Size(75, 23);
+            this.buttonAtras.Size = new System.Drawing.Size(75, 32);
             this.buttonAtras.TabIndex = 1;
             this.buttonAtras.Text = "Atras";
             this.buttonAtras.UseVisualStyleBackColor = true;
@@ -68,7 +74,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(385, 450);
+            this.ClientSize = new System.Drawing.Size(418, 481);
             this.Controls.Add(this.buttonAtras);
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
