@@ -90,7 +90,7 @@ namespace ControlDeRegistroDeEmpleados
             this.BotonGenerarRegistrosJornada.TabIndex = 3;
             this.BotonGenerarRegistrosJornada.Text = "Generar registros de jornada";
             this.BotonGenerarRegistrosJornada.UseVisualStyleBackColor = false;
-            this.BotonGenerarRegistrosJornada.Click += new System.EventHandler(this.BotonGenerarRegistrosJornada_Click);
+            this.BotonGenerarRegistrosJornada.Click += new System.EventHandler(this.BotonGenerarRegistrosJornada_Click_1);
             // 
             // panelFiltrado
             // 
