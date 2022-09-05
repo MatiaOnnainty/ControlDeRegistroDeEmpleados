@@ -29,7 +29,6 @@ namespace ControlDeRegistroDeEmpleados
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.BotonCargarArchivo = new System.Windows.Forms.Button();
             this.BotonCrearArchivoExcel = new System.Windows.Forms.Button();
             this.dataGridViewPlanilla = new System.Windows.Forms.DataGridView();
@@ -124,6 +123,7 @@ namespace ControlDeRegistroDeEmpleados
             this.dataGridViewEscondido.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewEscondido.BackgroundColor = System.Drawing.Color.PeachPuff;
             this.dataGridViewEscondido.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewEscondido.Enabled = false;
             this.dataGridViewEscondido.GridColor = System.Drawing.SystemColors.ControlLight;
             this.dataGridViewEscondido.Location = new System.Drawing.Point(13, 40);
             this.dataGridViewEscondido.Name = "dataGridViewEscondido";
