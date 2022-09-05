@@ -141,7 +141,9 @@ namespace ControlDeRegistroDeEmpleados
                 iRow++;
             }
 
+
             //dataGridViewPlanilla.DataSource = dt;
+
         }
         private void Form1_Load(object sender, EventArgs e)
         {
