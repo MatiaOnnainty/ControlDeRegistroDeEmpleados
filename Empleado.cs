@@ -22,13 +22,11 @@ namespace ControlDeRegistroDeEmpleados
         //nuevo
         private List<Registro_acceso> listaRegistros = new List<Registro_acceso>();
         private List<Jornada> Historial = new List<Jornada>();
-
-
         public string Nombre { get; set; }
-        
         public string DNI { get; set; }
-
+        public double HorasSemanales { get; set; }
         public List<Registro_acceso> ListaRegistro { get => listaRegistros; set => listaRegistros = value; }
+
 
         private double CalcularHorasDia(DateTime fecha, List<Registro_acceso> lista)
         {
@@ -93,6 +91,7 @@ namespace ControlDeRegistroDeEmpleados
                 }
 
             }
+            this.HorasSemanales += Math.Round(horasTrabajadas,2);
 
             return Math.Round(horasTrabajadas, 2);
         }
@@ -127,6 +126,7 @@ namespace ControlDeRegistroDeEmpleados
                 {
                     Jornada jornada = new Jornada();
                     jornada.HorasTrabajadas = CalcularHorasDia(fecha, registroDias);
+                    jornada.HorasSemanales += jornada.HorasTrabajadas;
                     jornada.Fecha = fecha;
                     jornada.Observaciones = registroDias[0].Observaciones;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.IO;
@@ -16,6 +17,7 @@ namespace ControlDeRegistroDeEmpleados
 
         public Form1 FormularioPadre { get; set; }
         public DataTable DatosEmpleados { get; set; }
+        public List<Empleado> ListaEmpleados { get; set; }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -42,6 +44,7 @@ namespace ControlDeRegistroDeEmpleados
             jornadaEmpleados.FormularioPadre = this;
             jornadaEmpleados.DNI = dataGridViewEmpleados.Rows[e.RowIndex].Cells[0].Value.ToString();
             jornadaEmpleados.Nombre = dataGridViewEmpleados.Rows[e.RowIndex].Cells[1].Value.ToString();
+            jornadaEmpleados.ListaEmpleados = ListaEmpleados;
             jornadaEmpleados.ShowDialog();
         }
 

@@ -131,6 +131,8 @@ namespace ControlDeRegistroDeEmpleados
             
         }
 
+        List<Empleado> listaFinal;
+
         private void BotonGenerarRegistrosJornada_Click(object sender, EventArgs e)
         {
             string path = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx";
@@ -144,7 +146,7 @@ namespace ControlDeRegistroDeEmpleados
             dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[2].Value.ToString(), typeof(string));
             dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[3].Value.ToString(), typeof(string));
 
-            List<Empleado> listaFinal = new List<Empleado>();
+            listaFinal = new List<Empleado>();
             int contador = 0;
 
 
@@ -244,6 +246,7 @@ namespace ControlDeRegistroDeEmpleados
 
             }
             empleadosRegistrados.DatosEmpleados = DtEmpleados;
+            empleadosRegistrados.ListaEmpleados = listaFinal;
             empleadosRegistrados.ShowDialog();
         }
 

@@ -22,11 +22,25 @@ namespace ControlDeRegistroDeEmpleados
         public EmpleadosRegistrados FormularioPadre { get; set; }
         public string DNI { get; set; }
         public string Nombre { get; set; }
+        public List<Empleado> ListaEmpleados { get; set; }
 
         private void JornadaEmpleados_Load(object sender, EventArgs e)
         {
+            Empleado em = new Empleado();
+            em.DNI = DNI;
             labelDNI.Text = DNI;
             labelNombre.Text = Nombre;
+            
+
+            foreach (Empleado empleado in ListaEmpleados)
+            {
+                if (em.DNI == empleado.DNI)
+                {
+                    em.HorasSemanales = empleado.HorasSemanales;
+                }
+            }
+            labelHorasSemanales.Text = "Horas Semanales: " + em.HorasSemanales.ToString();
+
             //Definis la ruta
             String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistrosEmpleados\\" + this.Nombre + " - " + this.DNI + ".xlsx";
             //Definis el connectionString
