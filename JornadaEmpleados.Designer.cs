@@ -93,8 +93,9 @@
             this.BotonSalir.Name = "BotonSalir";
             this.BotonSalir.Size = new System.Drawing.Size(98, 23);
             this.BotonSalir.TabIndex = 3;
-            this.BotonSalir.Text = "Salir";
+            this.BotonSalir.Text = "Atras";
             this.BotonSalir.UseVisualStyleBackColor = false;
+            this.BotonSalir.Click += new System.EventHandler(this.BotonSalir_Click);
             // 
             // BotonVerCalendario
             // 

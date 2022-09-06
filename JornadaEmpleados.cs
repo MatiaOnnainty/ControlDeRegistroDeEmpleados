@@ -64,6 +64,13 @@ namespace ControlDeRegistroDeEmpleados
             ds.AsEnumerable().Where(row => row.ItemArray.All(field => field == null || field == DBNull.Value || field.Equals(string.Empty) || string.IsNullOrWhiteSpace(field.ToString()))).ToList().ForEach(row => row.Delete());
             ds.AcceptChanges();
 
+            foreach (DataRow item in ds.Rows)
+            {
+                item[0] = Convert.ToDateTime(item[0]).ToString("dd/mm/yyyy");
+                ds.AcceptChanges();
+            }
+            
+
             dataGridViewRegistros.DataSource = ds.DefaultView;
             //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
             //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
@@ -79,6 +86,12 @@ namespace ControlDeRegistroDeEmpleados
             Calendario calendario = new Calendario();
             calendario.empleadoActual = em;
             calendario.ShowDialog();
+        }
+
+        private void BotonSalir_Click(object sender, EventArgs e)
+        {
+            FormularioPadre.Show();
+            this.Close();
         }
     }
 }
