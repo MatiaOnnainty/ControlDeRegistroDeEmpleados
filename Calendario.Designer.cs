@@ -35,7 +35,7 @@ namespace ControlDeRegistroDeEmpleados
             // calendar
             // 
             this.calendar.BackColor = System.Drawing.Color.BurlyWood;
-            this.calendar.Location = new System.Drawing.Point(18, 18);
+            this.calendar.Location = new System.Drawing.Point(44, 18);
             this.calendar.Name = "calendar";
             this.calendar.TabIndex = 0;
             // 
@@ -46,7 +46,10 @@ namespace ControlDeRegistroDeEmpleados
             this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(283, 190);
             this.Controls.Add(this.calendar);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Calendario";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calendario";
             this.Load += new System.EventHandler(this.Calendario_Load);
             this.ResumeLayout(false);

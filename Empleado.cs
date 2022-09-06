@@ -1,4 +1,5 @@
 ﻿using ControlDeAsistenciaPersonal;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using SpreadsheetLight;
 using System;
@@ -25,6 +26,7 @@ namespace ControlDeRegistroDeEmpleados
         public string Nombre { get; set; }
         public string DNI { get; set; }
         public double HorasSemanales { get; set; }
+        public int Faltas { get; set; }
         public List<Registro_acceso> ListaRegistro { get => listaRegistros; set => listaRegistros = value; }
         //public List<Jornada> Historial { get => Historial; set => Historial = value; }
 
@@ -61,12 +63,13 @@ namespace ControlDeRegistroDeEmpleados
                 }
                 else if (actual.Tipo == TipoRegistro.ingreso)
                 {
-
+                    this.Faltas++;
                     lista[0].Observaciones += "No marcó salida. Día -> " + actual.Fecha + "\n";
                 }
                 else if (actual.Tipo == TipoRegistro.egreso)
                 {
                     lista[0].Observaciones += "No marcó entrada. Día -> " + siguiente.Fecha + "\n";
+                    this.Faltas++;
                 }
                 else if (actual.Tipo == siguiente.Tipo && diferenciaDeHoras.Hours >= 1)
                 {
@@ -84,7 +87,7 @@ namespace ControlDeRegistroDeEmpleados
                     }
                     catch (Exception)
                     {
-
+                        this.Faltas++;
                         lista[0].Observaciones += "Salida se marco como entrada. Día -> " + siguiente.Fecha + "\n";
                     }
                     
@@ -98,9 +101,11 @@ namespace ControlDeRegistroDeEmpleados
 
         public void CalcularHorasTrabajadas()
         {
+            
             //variables para llevar los calculos de un dia especifico
             DateTime fecha = DateTime.Today;
             List<Registro_acceso> registroDias = new List<Registro_acceso>();
+            int lastRow = 0;
 
             //Generamos archivos individuales por persona que registran todos sus movimientos de entradas y salidas
             //con observaciones
@@ -126,9 +131,9 @@ namespace ControlDeRegistroDeEmpleados
                 {
                     Jornada jornada = new Jornada();
                     jornada.HorasTrabajadas = CalcularHorasDia(fecha, registroDias);
-                    jornada.HorasSemanales += jornada.HorasTrabajadas;
-                    jornada.Fecha = fecha;
+                    jornada.Fecha = Convert.ToDateTime(fecha.ToShortDateString());
                     jornada.Observaciones = registroDias[0].Observaciones;
+                    lastRow++;
 
                     this.Historial.Add(jornada);
 
@@ -157,8 +162,10 @@ namespace ControlDeRegistroDeEmpleados
 
             document.ImportDataTable(1, 1, dt, true);
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistrosEmpleados");
+            
             document.SaveAs(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistrosEmpleados\\" + this.Nombre + " - " + this.DNI + ".xlsx");
             //_ = File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\" + this.Nombre + " - " + this.Dni + ".xlsx") ? MessageBox.Show("empleado generado correctamente") : MessageBox.Show("no se generó el archivo");
+            this.ListaRegistro.Clear();
         }
 
 

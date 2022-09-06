@@ -84,7 +84,7 @@ namespace ControlDeRegistroDeEmpleados
 
         public void CargarDatos(string path)
         {
-            /*//Definis la ruta
+            //Definis la ruta
             String directorioArchivo = path;
             //Definis el connectionString
             String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
@@ -107,10 +107,10 @@ namespace ControlDeRegistroDeEmpleados
             ds.Columns[0].ColumnName = "dni";
             ds.AcceptChanges();
 
-            //dataGridViewPlanilla.DataSource = ds.DefaultView;
+            dataGridViewPlanilla.DataSource = ds.DefaultView;
             //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
-            //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);*/
-            SLDocument sl = new SLDocument(path);
+            //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
+            /*SLDocument sl = new SLDocument(path);
 
             int iRow = 4;
 
@@ -142,7 +142,7 @@ namespace ControlDeRegistroDeEmpleados
             }
 
 
-            //dataGridViewPlanilla.DataSource = dt;
+            //dataGridViewPlanilla.DataSource = dt;*/
 
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -164,7 +164,7 @@ namespace ControlDeRegistroDeEmpleados
             
         }
 
-        List<Empleado> listaFinal;
+        private List<Empleado> listaFinal = new List<Empleado>();
 
         private void BotonGenerarRegistrosJornada_Click(object sender, EventArgs e)
         {
@@ -172,16 +172,12 @@ namespace ControlDeRegistroDeEmpleados
 
             SLDocument document = new SLDocument();
             DataTable dt = new DataTable();
-
+            int index = 0;
 
             dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[0].Value.ToString(), typeof(string));
             dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[1].Value.ToString(), typeof(string));
             dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[2].Value.ToString(), typeof(string));
             dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[3].Value.ToString(), typeof(string));
-
-            listaFinal = new List<Empleado>();
-            int contador = 0;
-
 
             string dni, nombre, fecha, tipo;
             Empleado persona = null;
@@ -196,9 +192,23 @@ namespace ControlDeRegistroDeEmpleados
 
                 if (persona == null)
                 {
-                    persona = new Empleado();
-                    persona.Nombre = nombre;
-                    persona.DNI = dni;
+                    foreach (Empleado item in listaFinal)
+                    {
+                        if (item.DNI == dni)
+                        {
+                            persona = item;
+                            listaFinal.Remove(item);
+                            break;
+                        }
+                        index++;
+                    }
+
+                    if (persona == null)
+                    {
+                        persona = new Empleado();
+                        persona.Nombre = nombre;
+                        persona.DNI = dni;
+                    }                    
                 }
                 else if (persona.DNI != dni)
                 {
@@ -222,6 +232,7 @@ namespace ControlDeRegistroDeEmpleados
                 if (dt.Rows.Count == 0)
                 {
                     dt.Rows.Add(dni, nombre, fecha, tipo);
+                    //listaFinal.Add(persona);
                 }
 
                 //CONDICION PARA EL VALOR FINAL (PARA QUE SE GUARDEN)
@@ -235,7 +246,9 @@ namespace ControlDeRegistroDeEmpleados
             }
 
             DtEmpleados = dt;
+            
             document.ImportDataTable(1, 1, dt, true);
+            //document.InsertTable(document.ImportDataTable(1, 1, dt, true));
 
             document.SaveAs(path);
             //_ = File.Exists(path) ? MessageBox.Show("empleado generado correctamente") : MessageBox.Show("no se generó el archivo");
