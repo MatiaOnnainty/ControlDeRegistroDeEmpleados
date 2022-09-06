@@ -84,7 +84,7 @@ namespace ControlDeRegistroDeEmpleados
 
         public void CargarDatos(string path)
         {
-            //Definis la ruta
+            /*//Definis la ruta
             String directorioArchivo = path;
             //Definis el connectionString
             String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
@@ -107,11 +107,44 @@ namespace ControlDeRegistroDeEmpleados
             ds.Columns[0].ColumnName = "dni";
             ds.AcceptChanges();
 
-            dataGridViewPlanilla.DataSource = ds.DefaultView;
+            //dataGridViewPlanilla.DataSource = ds.DefaultView;
             //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
-            //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
-        }
+            //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);*/
+            SLDocument sl = new SLDocument(path);
 
+            int iRow = 4;
+
+            DataTable dt = new DataTable();
+            if (dataGridViewPlanilla.Rows.Count == 0)
+            {
+                dataGridViewPlanilla.Columns.Add("dni","DNI");
+                dataGridViewPlanilla.Columns.Add("nombre", "Nombre y Apellido");
+                dataGridViewPlanilla.Columns.Add("horas", "Horas");
+                dataGridViewPlanilla.Columns.Add("observaciones", "Observaciones");
+            }
+
+            dt.Columns.Add("DNI");
+            dt.Columns.Add("Nombre");
+            dt.Columns.Add("Horas");
+            dt.Columns.Add("Observaciones");
+
+            while (!String.IsNullOrEmpty(sl.GetCellValueAsString(iRow, 1)))
+            {
+                dt.Rows.Add();
+
+                dt.Rows[iRow - 4]["DNI"] = sl.GetCellValueAsString(iRow, 1);
+                dt.Rows[iRow - 4]["Nombre"] = sl.GetCellValueAsString(iRow, 2).ToUpperInvariant();
+                dt.Rows[iRow - 4]["Horas"] = sl.GetCellValueAsString(iRow, 3);
+                dt.Rows[iRow - 4]["Observaciones"] = sl.GetCellValueAsString(iRow, 4);
+
+                dataGridViewPlanilla.Rows.Add(dt.Rows[iRow - 4][0], dt.Rows[iRow - 4][1], dt.Rows[iRow - 4][2], dt.Rows[iRow - 4][3]);
+                iRow++;
+            }
+
+
+            //dataGridViewPlanilla.DataSource = dt;
+
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             if (File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx"))
