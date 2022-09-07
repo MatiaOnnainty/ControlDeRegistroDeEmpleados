@@ -1,4 +1,5 @@
 ﻿using ControlDeAsistenciaPersonal;
+using ControlDeRegistroDeEmpleados.modulo_calculo;
 using SpreadsheetLight;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using DataTable = System.Data.DataTable;
 
@@ -86,10 +88,12 @@ namespace ControlDeRegistroDeEmpleados
         {
             //Definis la ruta
             String directorioArchivo = path;
+            SLDocument sl = new SLDocument(path);
+            List<string> nombreHoja = sl.GetSheetNames();
             //Definis el connectionString
             String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
             //Definis la Query 
-            String consulta = "Select * from [Hoja 1$]";
+            String consulta = "Select * from ["+ nombreHoja[0] +"$]";
             //Instancias un nuevo objeto de tipo OleDbConnection y abris la conexión con .Open();
             OleDbConnection con = new OleDbConnection(conexion);
             con.Open();
@@ -169,21 +173,12 @@ namespace ControlDeRegistroDeEmpleados
         private void BotonGenerarRegistrosJornada_Click(object sender, EventArgs e)
         {
             string path = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx";
-
             SLDocument document = new SLDocument();
-            DataTable dt = new DataTable();
-            int index = 0;
-
-            dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[0].Value.ToString(), typeof(string));
-            dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[1].Value.ToString(), typeof(string));
-            dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[2].Value.ToString(), typeof(string));
-            dt.Columns.Add(dataGridViewPlanilla.Rows[0].Cells[3].Value.ToString(), typeof(string));
-
-            string dni, nombre, fecha, tipo;
             Empleado persona = null;
+            string dni, nombre, fecha, tipo;
 
             //lectura del datagridview y procesamiento de datos para calcular horas trabajadas por empleado
-            for (int i = 1; i < dataGridViewPlanilla.Rows.Count; i++)
+            for (int i = 0; i < dataGridViewPlanilla.Rows.Count; i++)
             {
                 dni = dataGridViewPlanilla.Rows[i].Cells[0].Value.ToString();
                 nombre = dataGridViewPlanilla.Rows[i].Cells[1].Value.ToString();
@@ -192,70 +187,83 @@ namespace ControlDeRegistroDeEmpleados
 
                 if (persona == null)
                 {
-                    foreach (Empleado item in listaFinal)
-                    {
-                        if (item.DNI == dni)
-                        {
-                            persona = item;
-                            listaFinal.Remove(item);
-                            break;
-                        }
-                        index++;
-                    }
-
-                    if (persona == null)
-                    {
-                        persona = new Empleado();
-                        persona.Nombre = nombre;
-                        persona.DNI = dni;
-                    }                    
+                    persona = ComprobarExistenciaEmpleado(nombre, dni);
                 }
                 else if (persona.DNI != dni)
                 {
-                    dt.Rows.Add(dni, nombre, fecha, tipo);
-
                     //cambio de persona entonces procesamos la anterior
                     persona.CalcularHorasTrabajadas();
+                    persona.Inasistencia = CalcularAsistencia(persona);
 
                     listaFinal.Add(persona);
 
-                    persona = new Empleado();
-                    persona.Nombre = nombre;
-                    persona.DNI = dni;
+                    persona = ComprobarExistenciaEmpleado(nombre, dni);
                 }
 
                 TipoRegistro tipoRegistro = tipo == "Registro de entrada" ? TipoRegistro.ingreso : TipoRegistro.egreso;
                 persona.ListaRegistro.Add(new Registro_acceso(Convert.ToDateTime(fecha), tipoRegistro));
 
-
-                //CONDICION PARA EL VALOR INICIAL
-                if (dt.Rows.Count == 0)
-                {
-                    dt.Rows.Add(dni, nombre, fecha, tipo);
-                    //listaFinal.Add(persona);
-                }
-
                 //CONDICION PARA EL VALOR FINAL (PARA QUE SE GUARDEN)
                 if (i == dataGridViewPlanilla.Rows.Count - 1)
                 {
                     //dt.Rows.Add(dni, nombre, fecha, tipo);
-                    //este if es para que me tome si hay un solo dni en el registro
+                    //este if es para que me tome si hay un solo dni en el registro+
+
                     persona.CalcularHorasTrabajadas();
+                    persona.Inasistencia = CalcularAsistencia(persona);
                     listaFinal.Add(persona);
                 }
             }
 
-            DtEmpleados = dt;
-            
-            document.ImportDataTable(1, 1, dt, true);
-            //document.InsertTable(document.ImportDataTable(1, 1, dt, true));
-
-            document.SaveAs(path);
-            //_ = File.Exists(path) ? MessageBox.Show("empleado generado correctamente") : MessageBox.Show("no se generó el archivo");
-
             MessageBox.Show("¡Registros Generados con éxito!");
 
             BotonVerListaEmpleados.Enabled = true;
+            dataGridViewPlanilla.DataSource = null;
+            BotonGenerarRegistrosJornada.Enabled = false;
+        }
+
+        private int CalcularAsistencia(Empleado persona)
+        {
+            int inasistencia = 0, registros = 0;
+            int total = 0;
+
+            foreach (Jornada item in persona.Historial)
+            {
+                if (item.HorasTrabajadas == 0)
+                {
+                    inasistencia++;
+                }
+                registros++;
+            }
+
+            total = 5 - inasistencia -(5-registros);
+
+            return total;
+        }
+
+        private Empleado ComprobarExistenciaEmpleado(string nombre, string dni)
+        {
+            Empleado em = new Empleado();
+            em = null;
+
+            foreach (Empleado item in listaFinal)
+            {
+                if (item.DNI == dni)
+                {
+                    em = item;
+                    em.ListaRegistro.Clear();
+                    listaFinal.Remove(item);
+                    em.HorasSemanales = 0;
+                    em.Inasistencia = 0;
+                    return em;
+                }
+
+            }
+            
+            em = new Empleado();
+            em.Nombre = nombre;
+            em.DNI = dni;
+            return em;
         }
 
         private void BotonVerListaEmpleados_Click(object sender, EventArgs e)
@@ -264,34 +272,7 @@ namespace ControlDeRegistroDeEmpleados
             EmpleadosRegistrados empleadosRegistrados = new EmpleadosRegistrados();
             empleadosRegistrados.FormularioPadre = this;
 
-            if (DtEmpleados == null && File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx"))
-            {
-                //Definis la ruta
-                String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx";
-                //Definis el connectionString
-                String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
-                //Definis la Query 
-                String consulta = "Select * from [Hoja1$]";
-                //Instancias un nuevo objeto de tipo OleDbConnection y abris la conexión con .Open();
-                OleDbConnection con = new OleDbConnection(conexion);
-                con.Open();
-                //Definisun Command pasándole tu query y el objeto de conexión
-                OleDbCommand cmd = new OleDbCommand(consulta, con);
-                //Por último creas un Adapter y se lo asignas a un DataSet
-                OleDbDataAdapter db = new OleDbDataAdapter(cmd);
-                DataTable ds = new DataTable();
-
-                db.Fill(ds);
-                con.Close();
-
-                //tomamos la primera tabla que es el documento seleccionado y borramos todas las fillas nulas o vacías
-                ds.AsEnumerable().Where(row => row.ItemArray.All(field => field == null || field == DBNull.Value || field.Equals(string.Empty) || string.IsNullOrWhiteSpace(field.ToString()))).ToList().ForEach(row => row.Delete());
-                ds.AcceptChanges();
-
-                DtEmpleados = ds;
-
-            }
-            empleadosRegistrados.DatosEmpleados = DtEmpleados;
+            //LISTA DE OBJETOS PERSONA (LIST<T>)
             empleadosRegistrados.ListaEmpleados = listaFinal;
             empleadosRegistrados.ShowDialog();
         }

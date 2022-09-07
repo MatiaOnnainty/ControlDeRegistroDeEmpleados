@@ -17,7 +17,7 @@ namespace ControlDeRegistroDeEmpleados
     {
         public Empleado()
         {
-
+            
         }
 
         //nuevo
@@ -26,7 +26,7 @@ namespace ControlDeRegistroDeEmpleados
         public string Nombre { get; set; }
         public string DNI { get; set; }
         public double HorasSemanales { get; set; }
-        public int Faltas { get; set; }
+        public int Inasistencia { get; set; }
         public List<Registro_acceso> ListaRegistro { get => listaRegistros; set => listaRegistros = value; }
         //public List<Jornada> Historial { get => Historial; set => Historial = value; }
 
@@ -41,6 +41,7 @@ namespace ControlDeRegistroDeEmpleados
                 lista[0].Observaciones = lista[0].Tipo.ToString() == "egreso" ?
                     "marco solo el egreso. fecha -> " + lista[0].Fecha :
                     "marco solo el ingreso. fecha -> " + lista[0].Fecha;
+                this.Inasistencia++;
                 return 0;
             }
 
@@ -58,18 +59,19 @@ namespace ControlDeRegistroDeEmpleados
                 {
                     //caso ideal
                     horasTrabajadas += (Convert.ToDouble(diferenciaDeHoras.TotalHours));
+                    
                     i++;
 
                 }
                 else if (actual.Tipo == TipoRegistro.ingreso)
                 {
-                    this.Faltas++;
+                    this.Inasistencia++;
                     lista[0].Observaciones += "No marcó salida. Día -> " + actual.Fecha + "\n";
                 }
                 else if (actual.Tipo == TipoRegistro.egreso)
                 {
                     lista[0].Observaciones += "No marcó entrada. Día -> " + siguiente.Fecha + "\n";
-                    this.Faltas++;
+                    this.Inasistencia++;
                 }
                 else if (actual.Tipo == siguiente.Tipo && diferenciaDeHoras.Hours >= 1)
                 {
@@ -82,12 +84,13 @@ namespace ControlDeRegistroDeEmpleados
                             //lista[0].Observaciones += "No marcó salida. Día -> " + actual.Fecha + "\n";
                             lista.Remove(lista[i + 1]);
                             i--;
+                            
                             continue;
                         }
                     }
                     catch (Exception)
                     {
-                        this.Faltas++;
+                        
                         lista[0].Observaciones += "Salida se marco como entrada. Día -> " + siguiente.Fecha + "\n";
                     }
                     
@@ -101,11 +104,9 @@ namespace ControlDeRegistroDeEmpleados
 
         public void CalcularHorasTrabajadas()
         {
-            
             //variables para llevar los calculos de un dia especifico
             DateTime fecha = DateTime.Today;
             List<Registro_acceso> registroDias = new List<Registro_acceso>();
-            int lastRow = 0;
 
             //Generamos archivos individuales por persona que registran todos sus movimientos de entradas y salidas
             //con observaciones
@@ -119,7 +120,7 @@ namespace ControlDeRegistroDeEmpleados
             {
                 Registro_acceso actual;
 
-                actual = this.listaRegistros[i];
+                actual = this.ListaRegistro[i];
 
                 //detecta cual es el primer registro
                 if (fecha.Date == DateTime.Today)
@@ -133,7 +134,9 @@ namespace ControlDeRegistroDeEmpleados
                     jornada.HorasTrabajadas = CalcularHorasDia(fecha, registroDias);
                     jornada.Fecha = Convert.ToDateTime(fecha.ToShortDateString());
                     jornada.Observaciones = registroDias[0].Observaciones;
-                    lastRow++;
+                    jornada.DNI = this.DNI;
+                    jornada.Inasistencia = this.Inasistencia;
+
 
                     this.Historial.Add(jornada);
 
@@ -148,8 +151,9 @@ namespace ControlDeRegistroDeEmpleados
                 {
                     Jornada jornada = new Jornada();
                     jornada.HorasTrabajadas = CalcularHorasDia(fecha, registroDias);
-                    jornada.Fecha = fecha;
+                    jornada.Fecha = Convert.ToDateTime(fecha.ToShortDateString());
                     jornada.Observaciones = registroDias[0].Observaciones;
+                    jornada.Inasistencia = this.Inasistencia;
 
                     this.Historial.Add(jornada);
                 }
@@ -165,7 +169,7 @@ namespace ControlDeRegistroDeEmpleados
             
             document.SaveAs(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistrosEmpleados\\" + this.Nombre + " - " + this.DNI + ".xlsx");
             //_ = File.Exists(Directory.GetCurrentDirectory() + "\\BD_EXCEL\\" + this.Nombre + " - " + this.Dni + ".xlsx") ? MessageBox.Show("empleado generado correctamente") : MessageBox.Show("no se generó el archivo");
-            this.ListaRegistro.Clear();
+            //this.ListaRegistro.Clear();
         }
 
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using SpreadsheetLight;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
@@ -16,8 +18,11 @@ namespace ControlDeRegistroDeEmpleados
         }
 
         public Form1 FormularioPadre { get; set; }
-        public DataTable DatosEmpleados { get; set; }
         public List<Empleado> ListaEmpleados { get; set; }
+
+        private DataTable dt = new DataTable();
+
+        private SLDocument sl = new SLDocument();
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -27,10 +32,28 @@ namespace ControlDeRegistroDeEmpleados
 
         private void EmpleadosRegistrados_Load_1(object sender, EventArgs e)
         {
-            dataGridViewEmpleados.DataSource = DatosEmpleados;
-            dataGridViewEmpleados.Columns[0].HeaderText = "DNI";
-            dataGridViewEmpleados.Columns[2].Visible = false;
-            dataGridViewEmpleados.Columns[3].Visible = false;
+            dataGridViewEmpleados.Columns.Add("dni","DNI");
+            dataGridViewEmpleados.Columns.Add("nombre", "Nombre y Apellido");
+            dataGridViewEmpleados.Columns.Add("faltas", "Inasistencias");
+            dataGridViewEmpleados.Columns.Add("horasSemanales", "Horas Semanales");
+            
+            dt.Columns.Add("DNI");
+            dt.Columns.Add("Nombre y Apellido");
+            dt.Columns.Add("Inasistencias");
+            dt.Columns.Add("Horas Semanales");
+
+
+            foreach (Empleado item in ListaEmpleados)
+            {
+                dataGridViewEmpleados.Rows.Add(item.DNI, item.Nombre, item.Inasistencia.ToString(), Math.Round(item.HorasSemanales,0).ToString());
+                dt.Rows.Add(item.DNI, item.Nombre, item.Inasistencia.ToString(),item.HorasSemanales.ToString());
+            }
+
+            //indiceFila, indiceColumna, tabla, bool que nos pregunta si dejamos los encabezados de la tabla
+            sl.ImportDataTable(1, 1, dt, true);
+            String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\ArchivoBusqueda.xlsx";
+            sl.SaveAs(directorioArchivo);
+
         }
 
         private void EmpleadosRegistrados_FormClosed_1(object sender, FormClosedEventArgs e)
@@ -50,6 +73,7 @@ namespace ControlDeRegistroDeEmpleados
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            //CONSULTA DE BUSQUEDA
             string consulta;
             if (textBoxDni.Text == "")
             {
@@ -62,7 +86,7 @@ namespace ControlDeRegistroDeEmpleados
             }
 
             //Definis la ruta
-            String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistroFinal.xlsx";
+            String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\ArchivoBusqueda.xlsx";
             //Definis el connectionString
             String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=NO;\"";
             //string conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
@@ -84,12 +108,8 @@ namespace ControlDeRegistroDeEmpleados
             ds.AsEnumerable().Where(row => row.ItemArray.All(field => field == null || field == DBNull.Value || field.Equals(string.Empty) || string.IsNullOrWhiteSpace(field.ToString()))).ToList().ForEach(row => row.Delete());
             ds.AcceptChanges();
 
-            ds.AsEnumerable().Where(row => row.ItemArray.All(field => field == null || field == DBNull.Value || field.Equals(string.Empty) || string.IsNullOrWhiteSpace(field.ToString()))).ToList().ForEach(row => row.Delete());
-            ds.AcceptChanges();
-
+            dataGridViewEmpleados.Columns.Clear();
             dataGridViewEmpleados.DataSource = ds.DefaultView;
-            dataGridViewEmpleados.Columns[2].Visible = false;
-            dataGridViewEmpleados.Columns[3].Visible = false;
         }
     }
 }

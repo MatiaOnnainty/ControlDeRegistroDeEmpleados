@@ -1,13 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.OleDb;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ControlDeRegistroDeEmpleados
@@ -25,55 +17,38 @@ namespace ControlDeRegistroDeEmpleados
         public List<Empleado> ListaEmpleados { get; set; }
 
         Empleado em = new Empleado();
+
         private void JornadaEmpleados_Load(object sender, EventArgs e)
         {
-            em.DNI = DNI;
-            labelDNI.Text = DNI;
-            labelNombre.Text = Nombre;
-            
-
             foreach (Empleado empleado in ListaEmpleados)
             {
-                if (em.DNI == empleado.DNI)
+                if (DNI == empleado.DNI)
                 {
                     //em.HorasSemanales = empleado.HorasSemanales;
                     em = empleado;
+                    break;
                 }
             }
+            labelDNI.Text = em.DNI;
+            labelNombre.Text = em.Nombre;
             labelHorasSemanales.Text = "Horas Semanales: " + em.HorasSemanales.ToString();
+            labelFaltas.Text = "Asistencia Semanal: " + em.Inasistencia.ToString();
 
-            //Definis la ruta
-            String directorioArchivo = Directory.GetCurrentDirectory() + "\\BD_EXCEL\\RegistrosEmpleados\\" + this.Nombre + " - " + this.DNI + ".xlsx";
-            //Definis el connectionString
-            String conexion = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + directorioArchivo + ";Extended Properties=\"Excel 12.0 Xml;HDR=YES;\"";
-            //Definis la Query 
-            String consulta = "Select * from [Sheet1$]";
-            //Instancias un nuevo objeto de tipo OleDbConnection y abris la conexión con .Open();
-            OleDbConnection con = new OleDbConnection(conexion);
-            con.Open();
-            //Definisun Command pasándole tu query y el objeto de conexión
-            OleDbCommand cmd = new OleDbCommand(consulta, con);
-            //Por último creas un Adapter y se lo asignas a un DataSet
-            OleDbDataAdapter db = new OleDbDataAdapter(cmd);
-            DataTable ds = new DataTable();
+            dataGridViewRegistros.Columns.Add("fecha","FECHA");
+            dataGridViewRegistros.Columns.Add("horas", "HORAS");
+            dataGridViewRegistros.Columns.Add("observaciones", "OBSERVACIONES");
 
-            db.Fill(ds);
-            con.Close();
-
-            //tomamos la primera tabla que es el documento seleccionado y borramos todas las fillas nulas o vacías
-            ds.AsEnumerable().Where(row => row.ItemArray.All(field => field == null || field == DBNull.Value || field.Equals(string.Empty) || string.IsNullOrWhiteSpace(field.ToString()))).ToList().ForEach(row => row.Delete());
-            ds.AcceptChanges();
-
-            foreach (DataRow item in ds.Rows)
+            string observaciones;
+            
+            foreach (Jornada item in em.Historial)
             {
-                item[0] = Convert.ToDateTime(item[0]).ToString("dd/mm/yyyy");
-                ds.AcceptChanges();
+                TimeSpan tiempo = new TimeSpan(Convert.ToInt32(Math.Floor(item.HorasTrabajadas)),
+                Convert.ToInt32((item.HorasTrabajadas - Math.Floor(item.HorasTrabajadas)) * 60),
+                0);
+                observaciones = (item.Observaciones != null) ? item.Observaciones.ToString() : ""; 
+                dataGridViewRegistros.Rows.Add(item.Fecha.ToString("dd/MM/yyyy"),tiempo.ToString(), observaciones);  
             }
             
-
-            dataGridViewRegistros.DataSource = ds.DefaultView;
-            //sort nos permite tomar una columna y ordenarla de forma ascendente o descendente
-            //dataGridViewRegistros.Sort(dataGridViewRegistros.Columns[1], System.ComponentModel.ListSortDirection.Ascending);
         }
 
         private void JornadaEmpleados_FormClosed_1(object sender, FormClosedEventArgs e)
